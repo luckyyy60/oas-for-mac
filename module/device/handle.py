@@ -6,16 +6,16 @@ import re
 from enum import Enum
 from cached_property import cached_property
 from anytree import NodeMixin, RenderTree, PreOrderIter
-from win32api import GetSystemMetrics, SendMessage, MAKELONG, PostMessage
-from win32print import GetDeviceCaps
-from win32process import GetWindowThreadProcessId
-from win32gui import (GetWindowText, EnumWindows, FindWindow, FindWindowEx,
-                      IsWindow, GetWindowRect, GetWindowDC, DeleteObject,
-                      SetForegroundWindow, IsWindowVisible, GetDC, GetParent,
-                      EnumChildWindows)
-from win32con import (SRCCOPY, DESKTOPHORZRES, DESKTOPVERTRES, WM_LBUTTONUP,
-                      WM_LBUTTONDOWN, WM_ACTIVATE, WA_ACTIVE, MK_LBUTTON,
-                      WM_NCHITTEST, WM_SETCURSOR, HTCLIENT, WM_MOUSEMOVE)
+# from win32api import GetSystemMetrics, SendMessage, MAKELONG, PostMessage
+# from win32print import GetDeviceCaps
+# from win32process import GetWindowThreadProcessId
+# from win32gui import (GetWindowText, EnumWindows, FindWindow, FindWindowEx,
+#                       IsWindow, GetWindowRect, GetWindowDC, DeleteObject,
+#                       SetForegroundWindow, IsWindowVisible, GetDC, GetParent,
+#                       EnumChildWindows)
+# from win32con import (SRCCOPY, DESKTOPHORZRES, DESKTOPVERTRES, WM_LBUTTONUP,
+#                       WM_LBUTTONDOWN, WM_ACTIVATE, WA_ACTIVE, MK_LBUTTON,
+#                       WM_NCHITTEST, WM_SETCURSOR, HTCLIENT, WM_MOUSEMOVE)
 from module.config.config import Config
 from module.logger import logger
 
@@ -26,7 +26,7 @@ def handle_title2num(title: str) -> int:
     :param title:
     :return:  如果没有找到就是返回零
     """
-    return FindWindow(None, title)
+    pass
 
 
 def handle_num2title(num: int) -> str:
@@ -35,7 +35,7 @@ def handle_num2title(num: int) -> str:
     :param num:
     :return:
     """
-    return None if num is None or num == 0 or num == '' else GetWindowText(num)
+    pass
 
 
 def is_handle_valid(num: int) -> bool:
@@ -44,7 +44,7 @@ def is_handle_valid(num: int) -> bool:
     :param num:
     :return:
     """
-    return IsWindow(num)
+    pass
 
 
 def handle_num2pid(num: int) -> int:
@@ -53,7 +53,7 @@ def handle_num2pid(num: int) -> int:
     :param num:
     :return:
     """
-    return 0 if num is None or num == 0 or num == '' else GetWindowThreadProcessId(num)[1]
+    pass
 
 
 def window_scale_rate() -> float:
@@ -61,15 +61,7 @@ def window_scale_rate() -> float:
     获取window的系统缩放 一遍是1
     :return:
     """
-    hDC = GetDC(0)
-    # 物理上（真实的）的 横纵向分辨率
-    wReal = GetDeviceCaps(hDC, DESKTOPHORZRES)
-    hReal = GetDeviceCaps(hDC, DESKTOPVERTRES)
-    # 缩放后的 分辨率
-    wAfter = GetSystemMetrics(0)
-    hAfter = GetSystemMetrics(1)
-    # print(wReal, wAfter)
-    return round(wReal / wAfter, 2)
+    pass
 
 
 class WindowNode(NodeMixin):
@@ -224,13 +216,7 @@ class Handle:
         :return:  类似这样['MuMu模拟器']
         """
 
-        def enum_windows_callback(hwnd, windows):
-            window_text = GetWindowText(hwnd)
-            windows.append(window_text)
-
-        windows = []
-        EnumWindows(enum_windows_callback, windows)
-        return windows
+        pass
 
     @classmethod
     def auto_handle_title(cls, windows: list) -> str:
@@ -282,18 +268,7 @@ class Handle:
         :param level:
         :return:
         """
-        child_windows = []
-        EnumChildWindows(hwnd, lambda hwnd, param: param.append(hwnd), child_windows)
-
-        if not child_windows:
-            return
-        for child_hwnd in child_windows:
-            if GetParent(child_hwnd) == hwnd:
-                child_text = GetWindowText(child_hwnd)
-                child_node = WindowNode(name=child_text, num=child_hwnd, parent=node)
-
-                # 递归遍历子窗体的子窗体
-                Handle.handle_tree(child_hwnd, child_node, level + 1)
+        pass
 
     @cached_property
     def emulator_family(self) -> EmulatorFamily:
@@ -378,19 +353,7 @@ class Handle:
         2023.7.1 在高缩放的设备上应该输出1280X720
         :return:
         """
-        winRect = GetWindowRect(self.screenshot_handle_num)
-        scale_rate = window_scale_rate()
-        width_before: int = winRect[2] - winRect[0]  # 右x-左x
-        height_before: int = winRect[3] - winRect[1]  # 下y - 上y 计算高度
-        width, height = width_before, height_before
-        if abs((width_before * scale_rate) - 1280) < 5:
-            width = 1280
-        if abs((height_before * scale_rate) - 720) < 5:
-            height = 720
-        if width is None or height is None:
-            logger.error(f'Get screenshot size error, width={width}, height={height}')
-            return None
-        return width, height
+        pass
 
     @cached_property
     def window_scale_rate(self) -> float:
@@ -398,15 +361,7 @@ class Handle:
         获取window的系统缩放 一般是1
         :return:
         """
-        hDC = GetDC(0)
-        # 物理上（真实的）的 横纵向分辨率
-        wReal = GetDeviceCaps(hDC, DESKTOPHORZRES)
-        hReal = GetDeviceCaps(hDC, DESKTOPVERTRES)
-        # 缩放后的 分辨率
-        wAfter = GetSystemMetrics(0)
-        hAfter = GetSystemMetrics(1)
-        # print(wReal, wAfter)
-        return round(wReal / wAfter, 2)
+        pass
 
 
     @classmethod

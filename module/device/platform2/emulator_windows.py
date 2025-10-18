@@ -2,7 +2,7 @@ import codecs
 import os
 import re
 import typing as t
-import winreg
+# import winreg
 from dataclasses import dataclass
 
 # module/device/platform/emulator_base.py
@@ -27,32 +27,14 @@ def list_reg(reg) -> t.List[RegValue]:
     """
     List all values in a reg key
     """
-    rows = []
-    index = 0
-    try:
-        while 1:
-            value = RegValue(*winreg.EnumValue(reg, index))
-            index += 1
-            rows.append(value)
-    except OSError:
-        pass
-    return rows
+    pass
 
 
 def list_key(reg) -> t.List[RegValue]:
     """
     List all values in a reg key
     """
-    rows = []
-    index = 0
-    try:
-        while 1:
-            value = winreg.EnumKey(reg, index)
-            index += 1
-            rows.append(value)
-    except OSError:
-        pass
-    return rows
+    pass
 
 
 def abspath(path):
@@ -224,33 +206,7 @@ class Emulator(EmulatorBase):
                         )
         elif self == Emulator.BlueStacks5:
             # Get UserDefinedDir, where BlueStacks stores data
-            folder = None
-            try:
-                with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\BlueStacks_nxt") as reg:
-                    folder = winreg.QueryValueEx(reg, 'UserDefinedDir')[0]
-            except FileNotFoundError:
-                pass
-            try:
-                with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\BlueStacks_nxt_cn") as reg:
-                    folder = winreg.QueryValueEx(reg, 'UserDefinedDir')[0]
-            except FileNotFoundError:
-                pass
-            if not folder:
-                return
-            # Read {UserDefinedDir}/bluestacks.conf
-            try:
-                with open(self.abspath('./bluestacks.conf', folder), encoding='utf-8') as f:
-                    content = f.read()
-            except FileNotFoundError:
-                return
-            # bst.instance.Nougat64.adb_port="5555"
-            emulators = re.findall(r'bst.instance.(\w+).status.adb_port="(\d+)"', content)
-            for emulator in emulators:
-                yield EmulatorInstance(
-                    serial=f'127.0.0.1:{emulator[1]}',
-                    name=emulator[0],
-                    path=self.path,
-                )
+            pass
         elif self == Emulator.BlueStacks4:
             # ../Engine/Android
             regex = re.compile(r'^Android')
@@ -366,29 +322,7 @@ class EmulatorManager(EmulatorManagerBase):
         Yields:
             str: Path to emulator executables, may contains duplicate values
         """
-        path = r'Software\Microsoft\Windows\CurrentVersion\Explorer\UserAssist'
-        # {XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}\xxx.exe
-        regex_hash = re.compile(r'{.*}')
-        try:
-            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, path) as reg:
-                folders = list_key(reg)
-        except FileNotFoundError:
-            return
-
-        for folder in folders:
-            try:
-                with winreg.OpenKey(winreg.HKEY_CURRENT_USER, f'{path}\\{folder}\\Count') as reg:
-                    for key in list_reg(reg):
-                        key = codecs.decode(key.name, 'rot-13')
-                        # Skip those with hash
-                        if regex_hash.search(key):
-                            continue
-                        for file in Emulator.multi_to_single(key):
-                            yield file
-            except FileNotFoundError:
-                # FileNotFoundError: [WinError 2] 系统找不到指定的文件。
-                # Might be a random directory without "Count" subdirectory
-                continue
+        pass
 
     @staticmethod
     def iter_mui_cache():
@@ -400,20 +334,7 @@ class EmulatorManager(EmulatorManagerBase):
         Yields:
             str: Path to emulator executable, may contains duplicate values
         """
-        path = r'Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\MuiCache'
-        try:
-            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, path) as reg:
-                rows = list_reg(reg)
-        except FileNotFoundError:
-            return
-
-        regex = re.compile(r'(^.*\.exe)\.')
-        for row in rows:
-            res = regex.search(row.name)
-            if not res:
-                continue
-            for file in Emulator.multi_to_single(res.group(1)):
-                yield file
+        pass
 
     @staticmethod
     def get_install_dir_from_reg(path, key):
@@ -425,20 +346,7 @@ class EmulatorManager(EmulatorManagerBase):
         Returns:
             str: Installation dir or None
         """
-        try:
-            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, path) as reg:
-                root = winreg.QueryValueEx(reg, key)[0]
-                return root
-        except FileNotFoundError:
-            pass
-        try:
-            with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, path) as reg:
-                root = winreg.QueryValueEx(reg, key)[0]
-                return root
-        except FileNotFoundError:
-            pass
-
-        return None
+        pass
 
     @staticmethod
     def iter_uninstall_registry():
@@ -453,48 +361,10 @@ class EmulatorManager(EmulatorManagerBase):
             r'Software\Microsoft\Windows\CurrentVersion\Uninstall'
         ]
         known_emulator_registry_name = [
-            'Nox',
-            'Nox64',
-            'BlueStacks',
-            'BlueStacks_nxt',
-            'BlueStacks_cn',
-            'BlueStacks_nxt_cn',
-            'LDPlayer',
-            'LDPlayer4',
-            'LDPlayer9',
-            'leidian',
-            'leidian4',
-            'leidian9',
-            'Nemu',
-            'Nemu9',
             'MuMuPlayer',
             'MuMuPlayer-12.0',
             'MuMu Player 12.0',
-            'MEmu',
         ]
-        for path in known_uninstall_registry_path:
-            try:
-                with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, path) as reg:
-                    software_list = list_key(reg)
-            except FileNotFoundError:
-                continue
-            for software in software_list:
-                if software not in known_emulator_registry_name:
-                    continue
-                try:
-                    with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, f'{path}\\{software}') as software_reg:
-                        uninstall = winreg.QueryValueEx(software_reg, 'UninstallString')[0]
-                except FileNotFoundError:
-                    continue
-                if not uninstall:
-                    continue
-                # UninstallString is like:
-                # C:\Program Files\BlueStacks_nxt\BlueStacksUninstaller.exe -tmp
-                # "E:\ProgramFiles\Microvirt\MEmu\uninstall\uninstall.exe" -u
-                # Extract path in ""
-                res = re.search('"(.*?)"', uninstall)
-                uninstall = res.group(1) if res else uninstall
-                yield uninstall
 
     @staticmethod
     def iter_running_emulator():

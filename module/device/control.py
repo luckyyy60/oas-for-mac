@@ -20,9 +20,9 @@ class Control(Minitouch, Adb, Scrcpy, Window):
     def click_methods(self):
         return {
             'ADB': self.click_adb,
-            'uiautomator2': self.click_uiautomator2,
-            'minitouch': self.click_minitouch,
-            'window_message': self.click_window_message
+            # 'uiautomator2': self.click_uiautomator2,
+            # 'minitouch': self.click_minitouch,
+            # 'window_message': self.click_window_message
             # 'Hermit': self.click_hermit,
             # 'MaaTouch': self.click_maatouch,
         }
@@ -31,10 +31,10 @@ class Control(Minitouch, Adb, Scrcpy, Window):
     def long_click_methods(self):
         return {
             'ADB': self.long_click_adb,
-            'uiautomator2': self.long_click_uiautomator2,
-            'minitouch': self.long_click_minitouch,
-            'window_message': self.long_click_window_message,
-            'scrcpy': self.long_click_scrcpy
+            # 'uiautomator2': self.long_click_uiautomator2,
+            # 'minitouch': self.long_click_minitouch,
+            # 'window_message': self.long_click_window_message,
+            # 'scrcpy': self.long_click_scrcpy
             # 'Hermit': self.click_hermit,
             # 'MaaTouch': self.click_maatouch,
         }

@@ -1,4 +1,3 @@
-import ctypes
 import re
 import subprocess
 import psutil
@@ -26,41 +25,13 @@ def minimize_by_name(window_name, convert_hidden=True):
         window_name (str): 窗口名称（支持部分匹配）
         convert_hidden (bool): 是否将隐藏窗口改为最小化
     """
-    def callback(hwnd, lParam):
-        title = get_window_title(hwnd)
-        if window_name.lower() in title.lower():
-            # 检查窗口当前状态
-            is_visible = ctypes.windll.user32.IsWindowVisible(hwnd)
-            
-            if is_visible:
-                # 可见窗口 → 最小化
-                minimize_window(hwnd)
-                logger.info(f'最小化可见窗口: {title}')
-            elif convert_hidden:
-                # 隐藏窗口 → 改为最小化不激活
-                ctypes.windll.user32.ShowWindow(hwnd, 6)  # SW_SHOWMINNOACTIVE
-                logger.info(f'隐藏窗口改为最小化: {title}')
-        return True
-    
-    WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, wintypes.HWND, ctypes.POINTER(ctypes.c_int))
-    ctypes.windll.user32.EnumWindows(WNDENUMPROC(callback), None)
+    pass
 
 def find_hwnd_by_name(window_name):
     """
     枚举所有窗口，返回第一个匹配名称的 hwnd
     """
-    target = None
-    def callback(hwnd, lParam):
-        title = get_window_title(hwnd)
-        if window_name.lower() in title.lower():
-            nonlocal target
-            target = hwnd
-            return False  # 停止枚举
-        return True
-
-    WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_bool, wintypes.HWND, ctypes.POINTER(ctypes.c_int))
-    ctypes.windll.user32.EnumWindows(WNDENUMPROC(callback), None)
-    return target
+    pass
 def show_window_by_name(window_name):
     """
     显示指定名称的窗口

@@ -4,7 +4,7 @@ import os
 import re
 import shutil
 import subprocess
-import winreg
+# import winreg
 
 from deploy.logger import logger
 from deploy.utils import cached_property

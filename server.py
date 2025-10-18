@@ -70,8 +70,10 @@ def fun(ev: threading.Event):
     )
     args, _ = parser.parse_known_args()
 
-    host = args.host or State.deploy_config.WebuiHost or "0.0.0.0"
-    port = args.port or int(State.deploy_config.WebuiPort) or 22270
+    # host = args.host or State.deploy_config.WebuiHost or "0.0.0.0"
+    # port = args.port or int(State.deploy_config.WebuiPort) or 22270
+    host = "127.0.0.1"
+    port = 34567
 
     logger.hr("Launcher config")
     logger.attr("Host", host)
