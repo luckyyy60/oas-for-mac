@@ -6,7 +6,7 @@ scipy
 #    pip-compile --annotation-style=line --output-file=requirements.txt requirements-in.txt
 #
 
-adbutils
+adbutils==0.11.0
 annotated-types
 anyio
 anytree
@@ -75,7 +75,7 @@ starlette
 sympy
 tqdm
 typing-extensions
-uiautomator2
+uiautomator2==2.16.17
 uiautomator2cache
 urllib3
 uvicorn
