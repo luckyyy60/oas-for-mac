@@ -2,7 +2,6 @@
 # @author runhey
 # github https://github.com/runhey
 import re
-from html import escape
 
 def replace_newline_with_br(input_text):
     replaced_text = input_text.replace('\n', '<br>')
@@ -25,7 +24,7 @@ def highlight_text(input_text):
 
     return replace_newline_with_br(input_text)
 
-# 测试
+# # 测试
 # input_string = 'The time is 13:20:36.411. Is it True or False? DEBUG: This is a debug message. INFO: This is an info message. WARNING: This is a warning message. ERROR: This is an error message. CRITICAL: This is a critical message.'
 # highlighted_text = highlight_text(input_string)
 # html_text = f'<html><body>{highlighted_text}</body></html>'

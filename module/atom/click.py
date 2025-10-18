@@ -3,9 +3,6 @@
 # github https://github.com/runhey
 import numpy as np
 
-from module.base.decorator import cached_property
-from module.logger import logger
-
 class RuleClick:
 
     def __init__(self, roi_front: tuple, roi_back: tuple, name: str = None) -> None:

@@ -1,4 +1,6 @@
 # This Python file uses the following encoding: utf-8
+import random
+import re
 from functools import wraps
 from typing import Callable, Generic, TypeVar
 
@@ -197,6 +199,7 @@ def run_once(f):
         if not wrapper.has_run:
             wrapper.has_run = True
             return f(*args, **kwargs)
+        return None
 
     wrapper.has_run = False
     return wrapper

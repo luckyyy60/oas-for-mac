@@ -2,7 +2,7 @@
 # @brief    Configurations for Ryou Dokan Toppa (阴阳竂道馆突破配置)
 # @author   jackyhwei
 # @note     draft version without full test
-# github    https://github.com/roarhill/oas
+# GitHub    https://github.com/roarhill/oas
 
 # pywin32 包内容
 # from scripts.regsetup import description

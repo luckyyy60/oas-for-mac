@@ -1,11 +1,11 @@
-'''
+"""
 author: cbb
 这个库基于贝塞尔曲线实现模拟人手动滑动的轨迹
 可以用于selenium轨迹的模拟，或者生成轨迹数组用于js加密通过网站服务器后端分控检测
 QQ群 134064772
 里面的人说话好听，个个都是人才
 copy from https://github.com/2833844911/gurs
-'''
+"""
 
 import numpy as np
 import math

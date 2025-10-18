@@ -2,7 +2,6 @@
 # @author runhey
 # github https://github.com/runhey
 import numpy as np
-
 from module.atom.image import RuleImage
 
 

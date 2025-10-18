@@ -3,7 +3,6 @@
 # github https://github.com/runhey
 
 import cv2
-import random
 import numpy as np
 
 from random import randint

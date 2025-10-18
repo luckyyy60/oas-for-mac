@@ -7,7 +7,7 @@ from functools import wraps
 
 def timer(function):
     """
-    装饰器 打印函数时间时间
+    装饰器 打印函数时间
     """
     @wraps(function)
     def function_timer(*args, **kwargs):
